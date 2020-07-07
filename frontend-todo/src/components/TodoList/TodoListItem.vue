@@ -5,12 +5,17 @@
             @click="openEditTodo({...todo})"
             :class="{ 'is-completed': todo.status == 'done' }"
         >
+            <img :if="todo_file_url" :src="todo_file_url" width="120">
             {{ todo.task }}
         </div>
         <div class="todo-item-status">
             <input type="checkbox" :checked="todo.status == 'done'" @click="toggleTodoStatus({...todo})">
+            <button class="todo-item-icon-button" @click="handleSetTodoIcon">Add Icon</button>
             <button class="todo-item-status-button" @click="handleRemoveTodo({...todo})">Del</button>
         </div>
+
+        <!-- hidden icon selector -->
+        <input type="file" ref="icon_selector" @change="iconFileChosed" style="display: none;">
     </div>
 </template>
 
@@ -23,7 +28,27 @@ export default {
         }
     },
 
+    computed: {
+        todo_file_url: function () {
+            if (this.todo.files) {
+                return this.todo.files[0].url
+            } else return false
+        }
+    },
+
     methods: {
+        handleSetTodoIcon () {
+            this.$refs.icon_selector.click()
+        },
+
+        iconFileChosed (event) {
+            this.$store.dispatch('uploadTodoFile', event.target.files[0])
+            .then(file => {
+                this.todo.files = [file]
+                return this.$store.dispatch('updateTodoFiles', this.todo)
+            })
+        },
+
         handleRemoveTodo (todo) {
             this.$store.dispatch('deleteTodo', todo)
         },
@@ -46,7 +71,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .todo-item {
     color: #444;
     font-size: 25px;
@@ -93,20 +118,33 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
+button {
+    border: none;
+    border-radius: 5px;
+    transition: .2s all;
+    cursor: pointer;
+}
+
 .todo-item-status-button {
     background: #dd3333;
     color: #fafafa;
-    border: none;
-    border-radius: 5px;
-    
-    transition: .2s all;
-
-    cursor: pointer;
 }
 .todo-item-status-button:hover {
     background: #bb3333;
 }
 .todo-item-status-button:active {
     background: #aa3333;
+}
+.todo-item-icon-button {
+    margin: 0 3px 0 20px;
+    background: orange;
+    color: #fafafa;
+}
+.todo-item-icon-button:hover {
+    background: orangered;
+}
+.todo-item-icon-button:active {
+    background: peru;
 }
 </style>

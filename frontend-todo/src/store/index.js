@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import api from '@/services/api'
+import storage from '@/services/storage'
 
 Vue.use(Vuex)
 
@@ -47,6 +48,18 @@ const actDeleteTodo = async ({ commit }, todo) => {
   commit('removeTodoById', todo.id)
   commit('setLoading', false)
 }
+const actUploadTodoFile = async ({ commit }, file) => {
+  commit('setLoading', true)
+  const file_data = await storage.uploadFile(file)
+  commit('setLoading', false)
+  return file_data
+}
+const actUpdateTodoFiles = async ({ commit }, todo) => {
+  commit('setLoading', true)
+  const { data } = await api.patch(`todos/${todo.id}/files`, { files: todo.files })
+  commit('updateTodo', data.todo)
+  commit('setLoading', false)
+}
 
 export default new Vuex.Store({
   state: {
@@ -69,6 +82,8 @@ export default new Vuex.Store({
     deleteTodo: actDeleteTodo,
     updateTodoStatus: actUpdateTodoStatus,
     updateTodoTaskName: actUpdateTodoTaskName,
+    uploadTodoFile: actUploadTodoFile,
+    updateTodoFiles: actUpdateTodoFiles,
   },
   modules: {
   }
