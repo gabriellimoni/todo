@@ -43,10 +43,10 @@ class TodoController {
         res.status(200).send({ success: true, todo: updated_todo })
     }
 
-    updateTodoFileUri (req, res) {
+    updateTodoFiles (req, res) {
         const id = req.params.id
-        const file_uri = req.body.file_uri
-        const updated_todo = todoRepository.updateTodoById(id, { file_uri })
+        const files = req.body.files
+        const updated_todo = todoRepository.updateTodoById(id, { files })
         res.status(200).send({ success: true, todo: updated_todo })
     }
 

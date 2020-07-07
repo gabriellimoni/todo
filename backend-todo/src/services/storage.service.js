@@ -13,7 +13,12 @@ class StorageService {
 
         const file_url = `${process.env.BACKEND_BASE_URL}/storage/${file_name}`
         
-        return file_url
+        const file_data = {
+            key: file_id,
+            url: file_url,
+        }
+
+        return file_data
     }
 }
 

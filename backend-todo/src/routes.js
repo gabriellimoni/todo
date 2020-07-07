@@ -15,7 +15,7 @@ router
     .delete('/todos/:id', todoController.delete)
     .patch('/todos/:id/status/:status', todoController.updateTodoStatus)
     .patch('/todos/:id/name/:task', todoController.updateTodoTaskName)
-    .patch('/todos/:id/file', todoController.updateTodoFileUri)
+    .patch('/todos/:id/files', todoController.updateTodoFiles)
     
     .post('/upload', upload.single('file'), uploadController.uploadFile)
 

@@ -4,8 +4,9 @@ const storageService = new StorageService()
 class UploadController {
     uploadFile (req, res) {
         const file = req.file
-        const file_url = storageService.uploadFile(file)
-        res.status(200).send({ success: true, data: { file_url } })
+        const file_data = storageService.uploadFile(file)
+        const { key, url } = file_data
+        res.status(200).send({ success: true, data: { key, url } })
     }
 }
 
