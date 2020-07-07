@@ -12,7 +12,7 @@ class TodoRepository {
         this._todos.push({
             id: 2,
             task: 'Task 02',
-            status: 'completed',
+            status: 'done',
             file_url: 'http://localhost:3000/storage/teste.txt',
         })
     }

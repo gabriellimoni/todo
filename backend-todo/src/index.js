@@ -2,9 +2,12 @@ require('dotenv').config({ path: '../.env' })
 const port = process.env.PORT || 3000
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const routes = require('./routes')
 
 const app = express()
+
+app.use(cors())
 
 app.get('/', async (req, res) => res.send('Hello World'))
 
