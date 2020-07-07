@@ -11,9 +11,9 @@ class StorageService {
 
         fs.writeFileSync(file_path, file.buffer)
 
-        const file_uri = `/storage/${file_name}`
+        const file_url = `${process.env.BACKEND_BASE_URL}/storage/${file_name}`
         
-        return file_uri
+        return file_url
     }
 }
 
