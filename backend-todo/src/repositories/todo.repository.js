@@ -43,7 +43,6 @@ class TodoRepository {
         let update_todo = this._todos.find(t => t.id == id)
         if (update_todo) {
             for (const key of Object.keys(todo)) {
-                console.log(update_todo[key], todo)
                 if (key == 'id') continue
                 update_todo[key] = todo[key]
             }
