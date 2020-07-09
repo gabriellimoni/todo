@@ -2,8 +2,6 @@ const Database = require('../database/index')
 const database = new Database()
 const ObjectID = require('mongodb').ObjectID
 class TodoRepository {
-    _todos = new Array()
-
     async getTodos () {
         const db = await database.getDb()
         const find_result = await db.collection('todos').find().toArray()
@@ -53,14 +51,6 @@ class TodoRepository {
         } else {
             return update_todo
         }
-    }
-
-    _getNextId () {
-        if (this._todos.length == 0) return 1
-
-        const all_ids = this._todos.map(todo => +todo.id)
-        const higher_id = Math.max(...all_ids)
-        return higher_id + 1
     }
 
     _removeMongoDbUnderscoreId(array) {
