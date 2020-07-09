@@ -1,53 +1,58 @@
+const Database = require('../database/index')
+const database = new Database()
+const ObjectID = require('mongodb').ObjectID
 class TodoRepository {
     _todos = new Array()
 
-    // development purposes
-        constructor () {
-        this._todos.push({
-            id: 1,
-            task: 'Task',
-            status: 'pending',
-            files: [],
-        })
-        this._todos.push({
-            id: 2,
-            task: 'Task 02',
-            status: 'done',
-            files: []
-        })
+    async getTodos () {
+        const db = await database.getDb()
+        const find_result = await db.collection('todos').find().toArray()
+        const todos = this._removeMongoDbUnderscoreId(find_result)
+        return todos
     }
 
-    getTodos () {
-        return this._todos
+    async getTodoById (id) {
+        const object_id = new ObjectID(id)
+        const db = await database.getDb()
+        const find_result = await db.collection('todos').find({ _id: object_id }).toArray()
+        const todo = this._removeMongoDbUnderscoreId(find_result)[0]
+        return todo
     }
 
-    getTodoById (id) {
-        const found_todo = this._todos.find(todo => todo.id == id)
-        return found_todo
-    }
-
-    addTodo (todo) {
-        const id = this._getNextId()
-        const new_todo = { id, ...todo }
-        this._todos.push(new_todo)
+    async addTodo (todo) {
+        const db = await database.getDb()
+        const insert_result = await db.collection('todos').insertOne(todo)
+        const new_todo = this._removeMongoDbUnderscoreId(insert_result.ops)[0]
         return new_todo
     }
 
-    deleteTodoById (id) {
-        const deleted_set = this._todos.filter(todo => todo.id != id)
-        this._todos = deleted_set
+    async deleteTodoById (id) {
+        const object_id = new ObjectID(id)
+        const db = await database.getDb()
+        await db.collection('todos').deleteOne({ _id: object_id })
         return
     }
 
-    updateTodoById (id, todo) {
-        let update_todo = this._todos.find(t => t.id == id)
+    async updateTodoById (id, todo) {
+        let update_todo = await this.getTodoById(id)
         if (update_todo) {
             for (const key of Object.keys(todo)) {
                 if (key == 'id') continue
                 update_todo[key] = todo[key]
             }
+            const object_id = new ObjectID(update_todo.id)
+            delete update_todo.id
+            const db = await database.getDb()
+            await db.collection('todos').updateOne(
+                {_id: object_id}, 
+                { $set: {...update_todo} }, 
+                { upsert: true }
+            )
+            const updated_todo = await this.getTodoById(id)
+            return updated_todo
+        } else {
+            return update_todo
         }
-        return update_todo
     }
 
     _getNextId () {
@@ -56,6 +61,14 @@ class TodoRepository {
         const all_ids = this._todos.map(todo => +todo.id)
         const higher_id = Math.max(...all_ids)
         return higher_id + 1
+    }
+
+    _removeMongoDbUnderscoreId(array) {
+        return array.map(res => {
+            res.id = res._id
+            delete res._id
+            return res
+        })
     }
 }
 

@@ -61,7 +61,6 @@ export default {
             todo: {
                 task: '',
                 status: 'pending',
-                file_url: '',
             }
         }
     },

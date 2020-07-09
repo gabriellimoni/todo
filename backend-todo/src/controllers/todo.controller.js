@@ -3,50 +3,50 @@ const todoRepository = new TodoRepository()
 
 class TodoController {
 
-    list (req, res) {
+    async list (req, res) {
         // todo
         // filter, sort, project by req.query
 
-        const todos = todoRepository.getTodos()
+        const todos = await todoRepository.getTodos()
         res.json(todos)
     }
 
-    getTodoById (req, res) {
+    async getTodoById (req, res) {
         const id = req.params.id
-        const todo = todoRepository.getTodoById(id)
+        const todo = await todoRepository.getTodoById(id)
         res.json(todo)
     }
 
-    create (req, res) {
+    async create (req, res) {
         const todo = req.body
-        const new_todo = todoRepository.addTodo(todo)
+        const new_todo = await todoRepository.addTodo(todo)
         res.status(201).send({ success: true, todo: new_todo })
     }
 
-    delete (req, res) {
+    async delete (req, res) {
         const id = req.params.id
-        todoRepository.deleteTodoById(id)
+        await todoRepository.deleteTodoById(id)
         res.status(200).send({ success: true })
     }
 
-    updateTodoStatus (req, res) {
+    async updateTodoStatus (req, res) {
         const id = req.params.id
         const status = req.params.status
-        const updated_todo = todoRepository.updateTodoById(id, { status })
+        const updated_todo = await todoRepository.updateTodoById(id, { status })
         res.status(200).send({ success: true, todo: updated_todo })
     }
 
-    updateTodoTaskName (req, res) {
+    async updateTodoTaskName (req, res) {
         const id = req.params.id
         const task = req.params.task
-        const updated_todo = todoRepository.updateTodoById(id, { task })
+        const updated_todo = await todoRepository.updateTodoById(id, { task })
         res.status(200).send({ success: true, todo: updated_todo })
     }
 
-    updateTodoFiles (req, res) {
+    async updateTodoFiles (req, res) {
         const id = req.params.id
         const files = req.body.files
-        const updated_todo = todoRepository.updateTodoById(id, { files })
+        const updated_todo = await todoRepository.updateTodoById(id, { files })
         res.status(200).send({ success: true, todo: updated_todo })
     }
 
