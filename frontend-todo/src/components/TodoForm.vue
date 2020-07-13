@@ -92,7 +92,6 @@ export default {
             this.todo = {
                 task: '',
                 status: 'pending',
-                file_url: '',
             }
         }
     },
