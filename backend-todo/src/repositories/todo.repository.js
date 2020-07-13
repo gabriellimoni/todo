@@ -22,7 +22,7 @@ class TodoRepository {
     }
 
     async updateTodoById (id, todo) {
-        let updated_todo = await todoModel.updateTodoById(id, todo)
+        const updated_todo = await todoModel.updateTodoById(id, todo)
         return updated_todo
     }
 }
