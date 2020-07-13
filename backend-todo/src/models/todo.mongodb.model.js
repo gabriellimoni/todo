@@ -1,4 +1,4 @@
-const Database = require('../database/index')
+const Database = require('../database/mongodb')
 const database = new Database()
 const ObjectID = require('mongodb').ObjectID
 
